@@ -1,0 +1,20 @@
+@import 'theme';
+
+.text-medium {
+  font-family: 'Montserrat-Medium', sans-serif;
+  font-size: 18px;
+  color: map-get($color-palette, dark-green);
+}
+
+.text-bold {
+  font-family: 'Montserrat-Bold', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  color: map-get($color-palette, dark-green);
+}
+
+.text-secondary {
+  font-family: 'Montserrat-Regular', sans-serif;
+  font-size: 16px;
+  color: map-get($color-palette, dark-gray);
+}

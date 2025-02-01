@@ -1,0 +1,10 @@
+$color-palette: (
+    dark-green: #181C14,
+    dark-gray: #3C3D37,
+    muted-green: #697565,
+    light-beige: #ECDFCC,
+);
+
+@function color($key) {
+  @return map-get($color-palette, $key);
+}
