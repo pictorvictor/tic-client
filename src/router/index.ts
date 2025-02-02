@@ -2,6 +2,7 @@ import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router";
 import { auth, onAuthStateChanged } from "@/utils/firebase";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
+import AlbumDetailView from "../views/AlbumDetailView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -16,10 +17,13 @@ const routes: Array<RouteRecordRaw> = [
     component: LoginView,
   },
   {
-    path: "/about",
-    name: "about",
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    path: "/album/:id",
+    name: "album-detail",
+    component: AlbumDetailView,
+    props: true,
+    meta: {
+      requiresAuth: true,
+    },
   },
 ];
 

@@ -1,37 +1,30 @@
 <template>
-  <div class="album-card">
-    <img :src="album.image" :alt="album.title" class="album-image" />
-    <div class="album-info">
-      <!-- Album title -->
-      <TextComponent variant="bold" class="album-title">{{
-        album.title
-      }}</TextComponent>
-      <!-- Artist name -->
-      <TextComponent variant="medium" class="album-artist"
-        >by {{ album.artist }}</TextComponent
-      >
-      <!-- Genre -->
-      <TextComponent variant="medium" class="album-genre">{{
-        album.genre
-      }}</TextComponent>
+  <router-link :to="'/album/' + album.id" class="album-card-link">
+    <div class="album-card">
+      <img :src="album.image" :alt="album.title" class="album-image" />
+      <div class="album-info">
+        <TextComponent variant="bold" class="album-title">{{
+          album.title
+        }}</TextComponent>
+        <TextComponent variant="medium" class="album-artist"
+          >by {{ album.artist }}</TextComponent
+        >
+        <TextComponent variant="medium" class="album-genre">{{
+          album.genre
+        }}</TextComponent>
+      </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script setup lang="ts">
 import { defineProps } from "vue";
 import TextComponent from "@/components/TextComponent.vue";
 
-const props = defineProps({
+defineProps({
   album: {
     type: Object,
     required: true,
-    default: () => ({
-      title: "",
-      artist: "",
-      genre: "",
-      image: "",
-    }),
   },
 });
 </script>

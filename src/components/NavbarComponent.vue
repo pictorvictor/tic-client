@@ -16,10 +16,6 @@
         <TextComponent variant="medium">Home</TextComponent>
       </router-link>
 
-      <router-link to="/about" class="nav-link">
-        <TextComponent variant="medium">About</TextComponent>
-      </router-link>
-
       <button v-if="user" @click="logout" class="logout-button">
         <TextComponent variant="medium">Logout</TextComponent>
       </button>
