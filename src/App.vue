@@ -1,30 +1,27 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view />
+  <div class="app-container">
+    <NavbarComponent />
+    <router-view />
+  </div>
 </template>
 
+<script setup lang="ts">
+import NavbarComponent from "@/components/NavbarComponent.vue";
+</script>
+
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+@import "@/assets/styles/theme.scss";
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  color: map-get($color-palette, dark-green);
 }
 
-nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+.app-container {
+  min-height: 100vh;
+  background-color: map-get($color-palette, light-beige);
 }
+
+/* You can add more global styles here */
 </style>
