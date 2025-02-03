@@ -1,6 +1,6 @@
 <template>
-  <router-link :to="'/album/' + album.id" class="album-card-link">
-    <div class="album-card">
+  <div class="album-card">
+    <router-link :to="'/album/' + album.id" class="album-card-link">
       <img :src="album.image" :alt="album.title" class="album-image" />
       <div class="album-info">
         <TextComponent variant="bold" class="album-title">{{
@@ -13,8 +13,8 @@
           album.genre
         }}</TextComponent>
       </div>
-    </div>
-  </router-link>
+    </router-link>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -32,23 +32,14 @@ defineProps({
 <style lang="scss" scoped>
 @import "@/assets/styles/theme.scss"; /* Import your color variables */
 
-/* Album card styling */
-.album-card {
-  background-color: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  width: 220px; /* Adjust width as needed */
-}
-
 .album-image {
-  width: 100%;
-  height: auto;
-  border-bottom: 2px solid map-get($color-palette, dark-green);
+  height: 243px; /* Adjust height as needed */
+  width: 243px;
+  object-fit: cover;
+  border: 1px solid rgba(#b8a894, 0.8);
 }
 
 .album-info {
-  padding: 10px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start; /* Align items to the left */
@@ -60,21 +51,29 @@ defineProps({
     $color-palette,
     dark-green
   ); /* Dark Green for the album title */
-  margin: 5px 0;
   text-align: left; /* Align the title to the left */
 }
 
 .album-artist {
   font-size: 14px;
+  margin-top: 5px;
   color: map-get($color-palette, dark-gray); /* Dark Gray for artist text */
-  margin: 5px 0;
   text-align: left; /* Align the artist to the left */
 }
 
 .album-genre {
   font-size: 12px;
+  margin-top: 5px;
   color: map-get($color-palette, muted-green); /* Muted Green for genre text */
-  margin: 5px 0;
   text-align: left; /* Align the genre to the left */
+}
+
+.album-card-link {
+  text-decoration: none; /* Remove underline by default */
+  color: inherit; /* Ensure it inherits the text color */
+
+  &:hover {
+    text-decoration: underline; /* Apply underline on hover */
+  }
 }
 </style>

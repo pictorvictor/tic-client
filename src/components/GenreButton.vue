@@ -1,14 +1,25 @@
 <template>
-  <button class="genre-button" @click="emit('click', genre)">
+  <button
+    class="genre-button"
+    :class="{ active: props.isActive }"
+    @click="emit('click', genre)"
+  >
     {{ genre }}
   </button>
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from "vue";
+import { defineProps, defineEmits, watch } from "vue";
 
-defineProps<{ genre: string }>();
+const props = defineProps<{ genre: string; isActive: boolean }>();
 const emit = defineEmits(["click"]);
+
+watch(
+  () => props.isActive,
+  (newVal) => {
+    console.log(`Button "${props.genre}" active state:`, newVal);
+  }
+);
 </script>
 
 <style lang="scss" scoped>
@@ -26,6 +37,12 @@ const emit = defineEmits(["click"]);
 
   &:hover {
     background-color: map-get($color-palette, dark-gray);
+  }
+
+  &.active {
+    background-color: map-get($color-palette, dark-gray);
+    font-weight: bold;
+    padding: 8px 16px;
   }
 }
 </style>

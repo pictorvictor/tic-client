@@ -55,7 +55,11 @@
           </button>
         </div>
 
-        <a :href="track.url" download class="download-button">⬇</a>
+        <TextComponent
+          @click="downloadFile(track.url, track.title)"
+          class="download-button"
+          >⬇</TextComponent
+        >
       </div>
     </div>
 
@@ -68,6 +72,12 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import TextComponent from "@/components/TextComponent.vue";
 import { useAlbumStore, Album } from "@/store/albumStore";
+import {
+  getStorage,
+  getDownloadURL,
+  getBlob,
+  ref as firebaseRef,
+} from "firebase/storage";
 
 const route = useRoute();
 const audioPlayer = ref<HTMLAudioElement | null>(null);
@@ -137,6 +147,28 @@ const formatTime = (seconds: number) => {
     .toString()
     .padStart(2, "0");
   return `${min}:${sec}`;
+};
+
+const downloadFile = async (filePath: string, fileName: string) => {
+  try {
+    const storage = getStorage();
+    const storageRef = firebaseRef(storage, filePath);
+    const blob = await getBlob(storageRef);
+
+    const blobUrl = URL.createObjectURL(blob);
+
+    const link = document.createElement("a");
+    link.href = blobUrl;
+    link.setAttribute("download", fileName || "file.mp3");
+
+    document.body.appendChild(link);
+    link.click();
+
+    document.body.removeChild(link);
+    URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error("Error downloading file:", error);
+  }
 };
 </script>
 

@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import axios from "axios";
+import { getAuth } from "firebase/auth";
 
 export interface Track {
   id: string;
@@ -20,11 +22,13 @@ export interface Album {
 export const useAlbumStore = defineStore("albumStore", () => {
   const albums = ref<Album[]>([]);
   const genres = ref<string[]>([]);
+  const isLoading = ref(false);
+  const error = ref<string | null>(null);
 
   const loadGenres = () => {
     genres.value = [
-      "all",
-      ...new Set(albums.value.map((album) => album.genre)),
+      "all genres",
+      ...new Set(albums.value.map((album) => album.genre.toLowerCase())),
     ];
   };
 
@@ -42,5 +46,42 @@ export const useAlbumStore = defineStore("albumStore", () => {
     return albums.value.find((album) => album.id === id);
   };
 
-  return { albums, genres, setAlbums, addAlbum, getAlbumById, loadGenres };
+  const fetchAlbums = async () => {
+    isLoading.value = true;
+    error.value = null;
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) {
+        throw new Error("User not authenticated");
+      }
+
+      const token = await user.getIdToken();
+
+      const response = await axios.get("http://localhost:3001/api/albums", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setAlbums(response.data);
+    } catch (err) {
+      error.value = "Failed to fetch albums";
+      console.error("Error fetching albums:", err);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  return {
+    albums,
+    genres,
+    isLoading,
+    error,
+    setAlbums,
+    addAlbum,
+    getAlbumById,
+    loadGenres,
+    fetchAlbums,
+  };
 });
