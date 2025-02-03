@@ -72,12 +72,7 @@ import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import TextComponent from "@/components/TextComponent.vue";
 import { useAlbumStore, Album } from "@/store/albumStore";
-import {
-  getStorage,
-  getDownloadURL,
-  getBlob,
-  ref as firebaseRef,
-} from "firebase/storage";
+import { getStorage, getBlob, ref as firebaseRef } from "firebase/storage";
 
 const route = useRoute();
 const audioPlayer = ref<HTMLAudioElement | null>(null);

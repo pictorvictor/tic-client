@@ -37,9 +37,35 @@ export const useAlbumStore = defineStore("albumStore", () => {
     loadGenres();
   };
 
-  const addAlbum = (album: Album) => {
-    albums.value.push(album);
-    loadGenres();
+  const addAlbum = async (album: Omit<Album, "id">) => {
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      const auth = getAuth();
+      const user = auth.currentUser;
+      if (!user) throw new Error("User not authenticated");
+
+      const token = await user.getIdToken();
+
+      const response = await axios.post(
+        "http://localhost:3001/api/albums",
+        album,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      albums.value.push(response.data);
+      loadGenres();
+    } catch (err) {
+      error.value = "Failed to add album";
+      console.error("Error adding album:", err);
+    } finally {
+      isLoading.value = false;
+    }
   };
 
   const getAlbumById = (id: string) => {

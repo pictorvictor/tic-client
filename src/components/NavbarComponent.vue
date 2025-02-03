@@ -10,7 +10,11 @@
         >
       </router-link>
     </div>
-
+    <div class="navbar-middle" v-if="user">
+      <button @click="showModal = true" class="add-album-button">
+        + add album
+      </button>
+    </div>
     <div class="navbar-right">
       <router-link to="/" class="nav-link">
         <TextComponent variant="medium">Home</TextComponent>
@@ -20,6 +24,7 @@
         <TextComponent variant="medium">Logout</TextComponent>
       </button>
     </div>
+    <AlbumModal v-if="showModal" @close="showModal = false" />
   </nav>
 </template>
 
@@ -29,6 +34,9 @@ import { useRouter } from "vue-router";
 import { auth } from "@/utils/firebase";
 import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import TextComponent from "@/components/TextComponent.vue";
+import AlbumModal from "@/components/AlbumModal.vue";
+
+const showModal = ref(false);
 
 const user = ref<User | null>(null);
 const router = useRouter();
@@ -95,5 +103,21 @@ const logout = async (): Promise<void> => {
   color: white;
   padding: 8px 12px;
   cursor: pointer;
+}
+
+.add-album-button {
+  background-color: map-get($color-palette, dark-gray);
+  color: map-get($color-palette, light-beige);
+  border: none;
+  padding: 8px 12px;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: map-get($color-palette, light-beige);
+    color: map-get($color-palette, dark-gray);
+  }
 }
 </style>
