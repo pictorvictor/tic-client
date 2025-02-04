@@ -5,7 +5,7 @@ const firebaseConfig = {
   apiKey: "AIzaSyD5lKYFlV7LWQgZlKeRKmUUdsIqjrK4Xok",
   authDomain: "camp-band.firebaseapp.com",
   projectId: "camp-band",
-  storageBucket: "camp-band.firebasestorage.app",
+  storageBucket: "camp-band-eu",
   messagingSenderId: "383680620997",
   appId: "1:383680620997:web:5153606851fe6b7f27c3ac",
 };

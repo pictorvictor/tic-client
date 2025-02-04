@@ -137,9 +137,9 @@ const handleImageUpload = async (event: Event) => {
     return;
   }
 
-  // Validate file size (max 2MB)
-  if (file.size > 2 * 1024 * 1024) {
-    alert("File is too large! Maximum size allowed is 2MB.");
+  // Validate file size (max 10MB)
+  if (file.size > 10 * 1024 * 1024) {
+    alert("File is too large! Maximum size allowed is 10MB.");
     return;
   }
 
