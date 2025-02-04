@@ -15,16 +15,16 @@
         + add album
       </button>
     </div>
-    <div class="navbar-right">
-      <router-link to="/" class="nav-link">
-        <TextComponent variant="medium">Home</TextComponent>
+    <div v-if="user" class="navbar-right">
+      <router-link to="/my-albums" class="nav-link navbar-right-item">
+        <TextComponent variant="bold">(y)our albums</TextComponent>
       </router-link>
-
-      <button v-if="user" @click="logout" class="logout-button">
-        <TextComponent variant="medium">Logout</TextComponent>
-      </button>
+      <span>♬</span>
+      <div @click="logout" class="logout-button navbar-right-item">
+        <TextComponent variant="bold">logoff</TextComponent>
+      </div>
     </div>
-    <AlbumModal v-if="showModal" @close="showModal = false" />
+    <AlbumModal :album="null" v-if="showModal" @close="showModal = false" />
   </nav>
 </template>
 
@@ -65,9 +65,10 @@ const logout = async (): Promise<void> => {
 .navbar {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
+  padding-left: 20px;
+  height: 60px;
   background-color: map-get($color-palette, muted-green);
+  align-items: center;
 }
 
 .navbar-left {
@@ -90,19 +91,36 @@ const logout = async (): Promise<void> => {
 .navbar-right {
   display: flex;
   align-items: center;
+  height: 100%;
+  font-size: 16px;
+}
+
+.navbar-right-item {
+  align-items: center;
+  display: flex;
+  height: 100%;
+  padding: 0 10px;
+  transition: 0.3s;
+  * {
+    &:hover {
+      color: map-get($color-palette, light-beige);
+      cursor: pointer;
+    }
+  }
+
+  &:last-child {
+    padding-right: 20px;
+  }
 }
 
 .nav-link {
-  margin: 0 10px;
   text-decoration: none;
+  cursor: default;
 }
 
 .logout-button {
   background: map-get($color-palette, muted-green);
-  border: none;
   color: white;
-  padding: 8px 12px;
-  cursor: pointer;
 }
 
 .add-album-button {
@@ -111,6 +129,7 @@ const logout = async (): Promise<void> => {
   border: none;
   padding: 8px 12px;
   margin: 5px;
+  margin-right: -20px;
   cursor: pointer;
   border-radius: 5px;
   transition: 0.3s;

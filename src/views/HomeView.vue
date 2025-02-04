@@ -15,6 +15,7 @@
         v-for="album in filteredAlbums"
         :key="album.id"
         :album="album"
+        @click="goToAlbumPage(album)"
       />
     </div>
   </div>
@@ -25,8 +26,10 @@ import { ref, computed, onMounted } from "vue";
 import AlbumCard from "@/components/AlbumCard.vue";
 import GenreButton from "@/components/GenreButton.vue";
 import { useAlbumStore } from "@/store/albumStore";
+import { useRouter } from "vue-router";
 
 const albumStore = useAlbumStore();
+const router = useRouter();
 
 onMounted(() => {
   albumStore.fetchAlbums();
@@ -43,9 +46,11 @@ const filteredAlbums = computed(() => {
 });
 
 const filterByGenre = (genre: string) => {
-  console.log("Selected Genre Before:", genreFilter.value);
   genreFilter.value = genre;
-  console.log("Selected Genre After:", genreFilter.value);
+};
+
+const goToAlbumPage = (album: { id: string }) => {
+  router.push(`/album/${album.id}`);
 };
 </script>
 
@@ -78,10 +83,8 @@ const filterByGenre = (genre: string) => {
   background-color: map-get($color-palette, dark-gray); /* Dark gray on hover */
 }
 
-/* Album grid */
 .album-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr); /* 4 columns */
-  gap: 20px;
 }
 </style>

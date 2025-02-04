@@ -2,6 +2,22 @@
   <teleport to="body">
     <div class="modal-overlay" @click.self="$emit('close')">
       <div class="modal-content">
+        <button
+          v-if="album.id"
+          class="delete-album"
+          @click="deleteAlbum(album.id)"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            class="trash-icon"
+            width="24"
+            height="24"
+          >
+            <path fill="none" d="M0 0h24v24H0z"></path>
+            <path d="M3 6h18v2H3zm3 3h12v11H6z" fill="currentColor"></path>
+          </svg>
+        </button>
         <div class="image-upload">
           <label for="image-upload" class="image-label">
             <img
@@ -46,11 +62,19 @@
             class="track-row"
           >
             <input v-model="track.title" placeholder="title" required />
+            <span
+              v-if="track.url"
+              class="change-file-trigger"
+              @click="() => (album.tracks[index].url = '')"
+              >change file</span
+            >
             <input
+              v-else
               type="file"
               accept="audio/*"
               @change="(e) => handleTrackUpload(e, index)"
               required
+              placeholder="track"
             />
             <button class="remove-track" @click="removeTrack(index)">X</button>
           </div>
@@ -62,7 +86,7 @@
           @click="handleSubmit"
           :disabled="isUploading"
         >
-          add
+          {{ album.id.length ? "update" : "add" }}
         </button>
       </div>
     </div>
@@ -70,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, defineEmits } from "vue";
+import { ref, defineEmits, defineProps } from "vue";
 import { useAlbumStore } from "@/store/albumStore";
 import {
   getStorage,
@@ -80,19 +104,26 @@ import {
   deleteObject,
 } from "firebase/storage";
 import TextComponent from "./TextComponent.vue";
+import { Album } from "@/store/albumStore";
 
 const emit = defineEmits(["close"]);
 const albumStore = useAlbumStore();
 const storage = getStorage();
+const props = defineProps<{ album: Album | null }>();
 
-const album = ref({
-  title: "",
-  artist: "",
-  genre: "",
-  image: "",
-  tracks: [{ title: "", url: "", id: "" }],
-  downloadUrl: "",
-});
+const album = ref(
+  props.album
+    ? { ...props.album }
+    : {
+        id: "",
+        title: "",
+        artist: "",
+        genre: "",
+        image: "",
+        tracks: [{ title: "", url: "", id: "" }],
+        downloadUrl: "",
+      }
+);
 
 const isUploading = ref(false);
 
@@ -204,12 +235,21 @@ const handleSubmit = () => {
 
   // Ensure all tracks have valid URLs
   if (album.value.tracks.some((track) => !track.url)) {
-    console.log(album.value.tracks);
     alert("Please upload all tracks before submitting.");
     return;
   }
+  if (album.value.id) {
+    albumStore.updateAlbum(album.value);
+  } else {
+    albumStore.addAlbum(album.value);
+  }
 
-  albumStore.addAlbum(album.value);
+  emit("close");
+};
+
+const deleteAlbum = async (albumId: string) => {
+  if (!confirm("Are you sure you want to delete this album?")) return;
+  await albumStore.deleteAlbum(albumId);
 
   emit("close");
 };
@@ -239,6 +279,7 @@ const handleSubmit = () => {
   flex-direction: column;
   align-items: center;
   gap: 15px;
+  position: relative;
 }
 
 .image-upload {
@@ -264,7 +305,6 @@ const handleSubmit = () => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 10px;
 }
 
 .form-grid {
@@ -295,6 +335,7 @@ input {
 .track-row {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
   margin: 10px;
 }
@@ -347,5 +388,29 @@ input {
 
 .tracks-label {
   margin-left: 30px;
+}
+
+.change-file-trigger {
+  transition: 0.3s;
+  cursor: pointer;
+  &:hover {
+    color: map-get($color-palette, muted-green);
+  }
+}
+
+.tracks-label {
+  text-decoration: underline;
+}
+
+.delete-album {
+  cursor: pointer;
+  background-color: map-get($color-palette, abort-red);
+  border-radius: 50%;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  z-index: 10;
+  border: none;
+  padding: 5px;
 }
 </style>

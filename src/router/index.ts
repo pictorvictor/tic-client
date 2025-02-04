@@ -3,6 +3,7 @@ import { auth, onAuthStateChanged } from "@/utils/firebase";
 import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import AlbumDetailView from "../views/AlbumDetailView.vue";
+import UserAlbumsView from "@/views/UserAlbumsView.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -25,6 +26,14 @@ const routes: Array<RouteRecordRaw> = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/my-albums",
+    name: "my-albums",
+    component: UserAlbumsView,
+    meta: {
+      requiresAuth: true,
+    },
+  },
 ];
 
 const router = createRouter({
@@ -32,7 +41,7 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, _from, next) => {
   if (to.meta.requiresAuth) {
     onAuthStateChanged(auth, (user) => {
       if (user) {

@@ -1,6 +1,6 @@
 <template>
   <div class="album-card">
-    <router-link :to="'/album/' + album.id" class="album-card-link">
+    <div @click="handleClick" class="album-card-link">
       <img :src="album.image" :alt="album.title" class="album-image" />
       <div class="album-info">
         <TextComponent variant="bold" class="album-title">{{
@@ -13,7 +13,7 @@
           album.genre
         }}</TextComponent>
       </div>
-    </router-link>
+    </div>
   </div>
 </template>
 
@@ -21,17 +21,27 @@
 import { defineProps } from "vue";
 import TextComponent from "@/components/TextComponent.vue";
 
-defineProps({
+const props = defineProps({
   album: {
     type: Object,
     required: true,
   },
+  onClick: {
+    type: Function,
+    required: true,
+  },
 });
+
+const handleClick = () => {
+  props.onClick(props.album);
+};
 </script>
 
 <style lang="scss" scoped>
 @import "@/assets/styles/theme.scss"; /* Import your color variables */
-
+.album-card {
+  margin: 20px;
+}
 .album-image {
   height: 243px; /* Adjust height as needed */
   width: 243px;
@@ -71,6 +81,7 @@ defineProps({
 .album-card-link {
   text-decoration: none; /* Remove underline by default */
   color: inherit; /* Ensure it inherits the text color */
+  cursor: pointer; /* Show pointer on hover */
 
   &:hover {
     text-decoration: underline; /* Apply underline on hover */
